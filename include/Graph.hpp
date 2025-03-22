@@ -19,8 +19,9 @@ namespace graph{
 				this->adjList = new int*[V];
 				for (size_t i = 0; i < V; i++)
 				{
-					adjList[i] = new int[V]};
+					adjList[i] = new int[V];
 				}
+			}
 				
 			
 			~Graph(){
