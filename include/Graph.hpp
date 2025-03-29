@@ -4,48 +4,55 @@
 #include "graph.hpp"
 #include <iostream>
 
-namespace graph{
-	class Graph{
-		int V; // number of vertexes
-		// the graph itself, array of arrays that each unit is a vertex that 
-		// holds his neighbouts, the limit is clique
-		int ** adjList;
 
+namespace graph{
+
+	// The vertices
+	typedef struct _Node{
+		int index;
+		int edgeWeight;
+		Pnode next;
+		_Node(int value, int w) : index(value),edgeWeight(w=0), next(nullptr){}
+	
+	}Node,*Pnode;
+
+	class Graph{
+		// number of vertexes
+		int V;
+		// the graph itself, array of nodes(vertices)
+		Pnode* adjlist;
 		public:
 
-		//inline
-			Graph(int V){
-				this->V = V;
-				this->adjList = new int*[V];
-				for (size_t i = 0; i < V; i++)
-				{
-					adjList[i] = new int[V];
-				}
-			}
+			Graph(int V);
 				
 			
-			~Graph(){
-				// delete the inner arrays and the array itself
-				for (size_t i = 0; i < V; i++)
-				{
-					delete[] adjList[i];
-				}
-				delete[] adjList;
-			}
+			~Graph();
 
 			/**
-			 * Adds an edge (not directed) to the graph
+			 * @brief Adds an edge (not directed) to the graph
+			 * 
+			 * @param s first vertix
+			 * @param t second vertix
+			 * @param w edge weight
 			 */
 			void addEdge(int s, int t, int w = 1);
 
 			/**
-			 * Removes edge given two int numbers that represent an edge and deletes it from the graph
-			 * @throws: exception if the edge is invalid
+			 
 			 */
+
+			 /**
+			  * @brief 
+			  * Removes edge given two int numbers that represent an edge and deletes it from the graph
+			  * @throws: exception if the edge is invalid 
+			  * @param a 
+			  * @param b 
+			  */
 			void removeEdge(int a, int b);
 
 			/**
-			 * Prints the graph
+			 * @brief prints the graph
+			 * 
 			 */
 			void print_graph();
 
