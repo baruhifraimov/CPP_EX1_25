@@ -1,7 +1,7 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
-#include "graph.hpp"
+#include "./namespace/graph.hpp"
 #include <iostream>
 
 
@@ -11,8 +11,10 @@ namespace graph{
 	typedef struct _Node{
 		int index;
 		int edgeWeight;
-		Pnode next;
-		_Node(int value, int w) : index(value),edgeWeight(w=0), next(nullptr){}
+		_Node* next;
+		_Node(int value, int w = 1) : index(value),edgeWeight(w){
+			this->next = nullptr;
+		}
 	
 	}Node,*Pnode;
 
@@ -35,7 +37,7 @@ namespace graph{
 			 * @param t second vertix
 			 * @param w edge weight
 			 */
-			void addEdge(int s, int t, int w = 1);
+			void addEdge(int s, int t, int w=1);
 
 			/**
 			 

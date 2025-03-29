@@ -2,7 +2,7 @@
 #define ALGORITHMS_HPP
 
 #include "Graph.hpp"
-#include "graph.hpp"
+#include "./namespace/graph.hpp"
 
 namespace graph{
 	class Algorithms{

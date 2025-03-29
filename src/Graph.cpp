@@ -1,59 +1,67 @@
 #include <iostream>
 #include "../include/Graph.hpp"
-#include "../include/graph.hpp"
+#include "../include/namespace/graph.hpp"
 
 
 
 using namespace graph;
 
-Graph::Graph(int V){
-	this->V = V;
+Graph::Graph(int V) : V(V){
 	adjlist = new Pnode[V];
-	for (size_t i = 0; i < V; i++)
+	for (int i = 0; i < V; i++)
 	{
-		adjlist[i] = nullptr;
+		adjlist[i] = new Node(i);
 	}
 }
 
 Graph::~Graph(){
 
-	for (size_t i = 0; i < V; i++)
-	{
-		while(!adjlist[i]){
-			Pnode curr = adjlist[i];
-			adjlist[i] = adjlist[i]->next;
-			delete curr;
+	for (int i = 0; i < V; i++) {
+		Pnode curr = adjlist[i];
+		while (curr != nullptr) {
+			Pnode temp = curr;
+			curr = curr->next;
+			delete temp;
 		}
-		delete[] adjlist[i];
 	}
-
 	delete[] adjlist;
 
 }
 
-void Graph::addEdge(int s,int t, int w=0){
-	Pnode source = adjlist[s];
-	while (!source->next && source->index != t)
-	{
-		source = source->next;
-	}
-	if(source->index == t){
-		std::cout << "The edge already exists!" << std::endl;
+void Graph::addEdge(int s,int t, int w){
+	if (s >= V || t >= V) {
+		std::cout << "Invalid edge: " << s << " -> " << t << std::endl;
 		return;
 	}
-	source->next = new Node(t,w);
 
-	Pnode sink = adjlist[t];
-	while (!sink->next)
-	{
-		sink = sink->next;
+	if (adjlist[s] == nullptr) {
+		adjlist[s] = new Node(t, w);
+	} else {
+		Pnode curr = adjlist[s];
+		while (curr->next != nullptr) {
+			if (curr->index == t) {
+				std::cout << "Edge already exists!" << std::endl;
+				return;
+			}
+			curr = curr->next;
+		}
+		curr->next = new Node(t, w);
 	}
-	sink->next = new Node(s,w);
+
+	if (adjlist[t] == nullptr) {
+		adjlist[t] = new Node(s, w);
+	} else {
+		Pnode curr = adjlist[t];
+		while (curr->next != nullptr) {
+			curr = curr->next;
+		}
+		curr->next = new Node(s, w);
+	}
 }
 
 void Graph::removeEdge(int a, int b){
 
-	for (size_t i = 0; !adjlist[b]; i++)
+	for (int i = 0; !adjlist[b]; i++)
 	{
 		if(adjlist[b]->next->index == a){
 			Pnode temp = adjlist[b]->next;
@@ -62,7 +70,7 @@ void Graph::removeEdge(int a, int b){
 		}
 	}
 
-	for (size_t i = 0; adjlist[a] != nullptr; i++)
+	for (int i = 0; adjlist[a] != nullptr; i++)
 	{
 		if(adjlist[a]->next->index == b){
 			Pnode temp = adjlist[a]->next;
@@ -74,11 +82,12 @@ void Graph::removeEdge(int a, int b){
 }
 
 void Graph::print_graph(){
-	for (size_t i = 0; i < V; i++)
+	for (int i = 0; i < V; i++)
 	{
-		while(adjlist[i]){
-			std::cout << "V:" << i << " --" << "("<< adjlist[i]->edgeWeight << ")"<< "-- " << "V:" << adjlist[i]->index << std::endl;
-			adjlist[i] = adjlist[i]->next;
+		Pnode curr = adjlist[i];
+		while(curr != nullptr){
+			std::cout << "[" << i << "]" << " --" << "("<< curr->edgeWeight << ")"<< "-- " << "[" << curr->index << "]"<< std::endl;
+			curr = curr->next;
 		}
 	}
 	
