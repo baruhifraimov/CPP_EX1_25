@@ -1,6 +1,7 @@
 #include <iostream>
 #include "../include/Graph.hpp"
 #include "../include/namespace/graph.hpp"
+#include "../include/DataStructures.hpp"
 
 
 
@@ -10,7 +11,7 @@ Graph::Graph(int V) : V(V){
 	adjlist = new Pnode[V];
 	for (int i = 0; i < V; i++)
 	{
-		adjlist[i] = new Node(i);
+		adjlist[i] = nullptr;
 	}
 }
 
@@ -29,7 +30,7 @@ Graph::~Graph(){
 }
 
 void Graph::addEdge(int s,int t, int w){
-	if (s >= V || t >= V) {
+	if (s >= this->V || s < 0 || t >= this->V || t < 0 ) {
 		std::cout << "Invalid edge: " << s << " -> " << t << std::endl;
 		return;
 	}
@@ -59,26 +60,45 @@ void Graph::addEdge(int s,int t, int w){
 	}
 }
 
-void Graph::removeEdge(int a, int b){
+void Graph::removeEdge(int a, int b) {
+	if (a < 0 || a >= V || b < 0 || b >= V) {
+        std::cout << "Invalid edge: " << a << " -> " << b << std::endl;
+        return;
+    }
 
-	for (int i = 0; !adjlist[b]; i++)
-	{
-		if(adjlist[b]->next->index == a){
-			Pnode temp = adjlist[b]->next;
-			adjlist[b]->next = temp->next;
-			delete temp;
-		}
-	}
+    // Remove edge from b's adjacency list
+    Pnode curr = adjlist[b];
+    Pnode prev = nullptr;
+    while (curr != nullptr) {
+        if (curr->index == a) {
+            if (prev == nullptr) { // Edge is the first node
+                adjlist[b] = curr->next;
+            } else {
+                prev->next = curr->next;
+            }
+            delete curr;
+            break;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
 
-	for (int i = 0; adjlist[a] != nullptr; i++)
-	{
-		if(adjlist[a]->next->index == b){
-			Pnode temp = adjlist[a]->next;
-			adjlist[a]->next = temp->next;
-			delete temp;
-		}
-	}
-	
+    // Remove edge from a's adjacency list
+    curr = adjlist[a];
+    prev = nullptr;
+    while (curr != nullptr) {
+        if (curr->index == b) {
+            if (prev == nullptr) { // Edge is the first node
+                adjlist[a] = curr->next;
+            } else {
+                prev->next = curr->next;
+            }
+            delete curr;
+            break;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
 }
 
 void Graph::print_graph(){

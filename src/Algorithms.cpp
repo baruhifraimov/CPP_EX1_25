@@ -1,6 +1,8 @@
 #include <iostream>
 #include "../include/Algorithms.hpp"
 #include "../include/namespace/graph.hpp"
+#include "../include/DataStructures.hpp"
+
 
 using namespace graph;
 

@@ -9,13 +9,13 @@ namespace graph{
 
 	// The vertices
 	typedef struct _Node{
-		int index;
-		int edgeWeight;
-		_Node* next;
-		_Node(int value, int w = 1) : index(value),edgeWeight(w){
-			this->next = nullptr;
-		}
-	
+			int index;
+			int edgeWeight;
+			_Node* next;
+		public:
+			_Node():next(nullptr){}
+			_Node(int value, int w = 1) : index(value),edgeWeight(w){
+				this->next = nullptr;}
 	}Node,*Pnode;
 
 	class Graph{

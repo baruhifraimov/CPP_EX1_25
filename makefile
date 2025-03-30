@@ -6,7 +6,7 @@ OBJDIR = ./obj
 
 
 #compile the main program
-Main: $(OBJDIR)/main.o $(OBJDIR)/Graph.o $(OBJDIR)/Algorithms.o 
+Main: $(OBJDIR)/main.o $(OBJDIR)/Graph.o $(OBJDIR)/Algorithms.o $(OBJDIR)/DataStructures.o 
 	$(CC) $(CCFLAGS) -o $@ $^
 
 #compile source files into object files
