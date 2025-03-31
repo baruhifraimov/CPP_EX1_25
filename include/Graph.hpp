@@ -24,10 +24,8 @@ namespace graph{
 		// the graph itself, array of nodes(vertices)
 		Pnode* adjlist;
 		public:
-
 			Graph(int V);
-				
-			
+			Graph(const Graph& other);
 			~Graph();
 
 			/**
@@ -57,6 +55,20 @@ namespace graph{
 			 * 
 			 */
 			void print_graph();
+
+			/**
+			 * @brief Get the Graph object
+			 * 
+			 * @return Pnode* adjlist
+			 */
+			Pnode* getGraph();
+
+			/**
+			 * @brief Returns the number of vertices of the graph
+			 * TL;DR - returns |V|
+			 * 
+			 */
+			int getNumVertices();
 
 	};
 }

@@ -31,12 +31,27 @@ bool Queue::isEmpty(){
  *                           PQUEUE                           *
  **************************************************************/
 void Pqueue::insert(int vertex, int priority){
-
+	if(this->size == this->capacity){
+		std::cout<< "Capacity exceeded" <<std::endl;
+		return;
+	}
+	Vertex x;
+	x.vertex = vertex;
+	x.distance = priority;
+	this->pqueue[this->capacity++] = x;
+	this->size++;
 }
 
 int Pqueue::extractMin(){
-	// NEED TO BE IMPLEMENTED
-	return this->pqueue[0].vertex;
+	Vertex min = this->pqueue[0];
+	for (int i = 0; i < this->capacity; i++)
+	{
+		if(min.distance > this->pqueue[i].distance){
+			min = this->pqueue[i];
+		}
+	}
+	
+	return min.vertex;
 }
 
 bool Pqueue::isEmpty(){

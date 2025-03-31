@@ -3,6 +3,7 @@
 #include "../../include/Algorithms.hpp"
 #include "../../include/DataStructures.hpp"
 
+using namespace graph;
 
 int main(){
 	// debug
@@ -14,29 +15,20 @@ int main(){
 	std::cout << "added edge ..." << std::endl;
 	g.addEdge(6,2,12);
 	std::cout << "added edge ..." << std::endl;
+	g.addEdge(2,4,12);
+	std::cout << "added edge ..." << std::endl;
+	g.addEdge(4,5,12);
+	std::cout << "added edge ..." << std::endl;
+	g.addEdge(5,1,12);
+	std::cout << "added edge ..." << std::endl;
 	g.addEdge(1,3,0);
 	std::cout << "added edge ..." << std::endl;
-
-	std::cout << "printed graph ..." << std::endl;
 	g.print_graph();
+	std::cout << "BFS Tree:" << std::endl;
+	graph::Graph t = Algorithms::bfs(g, 1);
+	t.print_graph();
 
-	std::cout << "remove edge ..." << std::endl;
-	g.removeEdge(1,2);
-
-	std::cout << "printed graph ..." << std::endl;
-	g.print_graph();
-
-	std::cout << "remove invalid edge ..." << std::endl;
-
-	g.removeEdge(1,12);
-	g.print_graph();
-
-	UnionFind n(3);
-	int x = n.find(1);
-	std::cout << x << std::endl;
-	n.unite(1,2);
-	x = n.find(2);
-	std::cout << x << std::endl;
-
+	graph::Graph et = Algorithms::dfs(g,1);
+	et.print_graph();
 	return 0;
 }

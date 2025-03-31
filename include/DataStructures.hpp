@@ -9,13 +9,13 @@
  class Queue{
 		int first;
 		int last;
-		int capacity;
 		int size;
+		int capacity;
 		int* queue;
 
 	public:
-		Queue(int capacity) : capacity(capacity),first(0),last(0),size(0){
-			this->queue = new int[capacity];
+		Queue(int capacity) : first(0),last(0),size(0),capacity(capacity){
+			this->queue = new int[capacity];	
 		}
 
 		~Queue(){
@@ -56,7 +56,7 @@
 typedef struct _Vertex {
     int vertex;
     int distance;
-}Vertex;
+	}Vertex;
 
 class Pqueue{
 	private:
@@ -114,7 +114,7 @@ class Stack{
 		int capacity;
 
 	public:
-		Stack(int capacity) : capacity(capacity), top(-1){
+		Stack(int capacity) : top(-1), capacity(capacity){
 			this->array = new int[capacity];
 		}
 		~Stack(){
