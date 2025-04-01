@@ -68,6 +68,11 @@ class Pqueue{
 		Pqueue(int capacity):capacity(capacity){
 			this->size = 0;
 			this->pqueue = new Vertex[capacity];
+			for (int i = 0; i < capacity; i++)
+			{
+				pqueue[i].vertex = -1;
+			}
+			
 		}
 		~Pqueue(){
 			delete[] pqueue;
@@ -104,6 +109,14 @@ class Pqueue{
 		 * @return false 
 		 */
 		bool contains(int vertex);
+
+		/**
+		 * @brief 
+		 * 
+		 * @param vertex 
+		 * @param newPriority 
+		 */
+		void decreaseKey(int vertex, int newPriority);
 };
 /**************************************************************
  *                           STACK                            *
@@ -166,6 +179,7 @@ class UnionFind{
 			}
 			
 		}
+
 		~UnionFind(){
 			delete[] parent;
 		}

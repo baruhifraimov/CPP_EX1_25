@@ -1,6 +1,5 @@
 #include <iostream>
 #include "../include/Graph.hpp"
-#include "../include/namespace/graph.hpp"
 #include "../include/DataStructures.hpp"
 
 #define INF 2147483647

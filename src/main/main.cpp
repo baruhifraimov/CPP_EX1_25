@@ -11,24 +11,23 @@ int main(){
 
 	graph::Graph g(7);
 	std::cout << "created graph..." << std::endl;
-	g.addEdge(1,2,13);
-	std::cout << "added edge ..." << std::endl;
-	g.addEdge(6,2,12);
-	std::cout << "added edge ..." << std::endl;
-	g.addEdge(2,4,12);
-	std::cout << "added edge ..." << std::endl;
-	g.addEdge(4,5,12);
-	std::cout << "added edge ..." << std::endl;
-	g.addEdge(5,1,12);
-	std::cout << "added edge ..." << std::endl;
-	g.addEdge(1,3,0);
-	std::cout << "added edge ..." << std::endl;
+
+	g.addEdge(0, 1, 2);
+	g.addEdge(0, 2, 4);
+	g.addEdge(1, 3, 7);
+	g.addEdge(1, 4, 1);
+	g.addEdge(2, 5, 3);
+	g.addEdge(3, 5, 1);
+	g.addEdge(4, 6, 5);
+	g.addEdge(5, 6, 2);
+
+
+
+
 	g.print_graph();
-	std::cout << "BFS Tree:" << std::endl;
-	graph::Graph t = Algorithms::bfs(g, 1);
+
+	graph::Graph t = graph::Algorithms::dijkstra(g,1);
 	t.print_graph();
 
-	graph::Graph et = Algorithms::dfs(g,1);
-	et.print_graph();
 	return 0;
 }

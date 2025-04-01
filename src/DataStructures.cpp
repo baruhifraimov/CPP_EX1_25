@@ -1,6 +1,8 @@
 #include "../include/DataStructures.hpp"
 #include <iostream>
 
+#define INF 2147483647
+
 /**************************************************************
  *                           QUEUE                            *
  **************************************************************/
@@ -38,20 +40,29 @@ void Pqueue::insert(int vertex, int priority){
 	Vertex x;
 	x.vertex = vertex;
 	x.distance = priority;
-	this->pqueue[this->capacity++] = x;
-	this->size++;
+	this->pqueue[this->size++] = x;
 }
 
-int Pqueue::extractMin(){
-	Vertex min = this->pqueue[0];
-	for (int i = 0; i < this->capacity; i++)
-	{
-		if(min.distance > this->pqueue[i].distance){
-			min = this->pqueue[i];
-		}
-	}
-	
-	return min.vertex;
+int Pqueue::extractMin() {
+    int minIndex = -1;
+    int minDistance = INF;
+
+    for (int i = 0; i < this->capacity; i++) {
+        if (pqueue[i].vertex != -1 && pqueue[i].distance < minDistance) {
+            minDistance = pqueue[i].distance;
+            minIndex = i;
+        }
+    }
+
+    if (minIndex == -1) {
+        return -1;
+    }
+
+    int minVertex = pqueue[minIndex].vertex;
+    pqueue[minIndex].vertex = -1;
+    pqueue[minIndex].distance = INF;
+    this->size--;
+    return minVertex;
 }
 
 bool Pqueue::isEmpty(){
@@ -67,6 +78,17 @@ bool Pqueue::contains(int vertex){
 	}
 	return false;
 }
+
+void Pqueue::decreaseKey(int vertex, int newPriority){
+    for (int i = 0; i < capacity; i++) {
+        if (pqueue[i].vertex == vertex) {
+            pqueue[i].distance = newPriority;
+            return;
+        }
+    }
+    std::cout << "Vertex " << vertex << " not found in queue" << std::endl;
+}
+
 /**************************************************************
  *                           STACK                            *
  **************************************************************/

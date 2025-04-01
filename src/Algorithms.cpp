@@ -171,9 +171,117 @@ Graph Algorithms::dfs(Graph g, int vertex){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 Graph Algorithms::dijkstra(Graph g, int vertex){
-	return NULL;
+	int numVer = g.getNumVertices();
+	
+	if (vertex >= numVer || vertex < 0){
+		std::cout << "Vertex out of bounds!" << std::endl;
+		return Graph(0);
+	}
+
+	 int* distance = new int[numVer];
+	 int* pie = new int[numVer];
+
+	 	// Initialize arrays
+	for (int i = 0; i < numVer; i++)
+	{
+		distance[i] = INF;
+		pie[i] = -1;
+	}
+
+	Pqueue pqueue(numVer);
+
+	distance[vertex] = 0;
+
+	for (int i = 0; i < numVer; i++)
+	{
+		pqueue.insert(i,distance[i]);
+	}
+
+	while(!pqueue.isEmpty()){
+		int u = pqueue.extractMin();
+		if(u == -1){
+			break;
+		}
+		Pnode p_u = g.getGraph()[u];
+		while(p_u != nullptr){
+			// the relax algorithm
+			int v = p_u->index;
+			int w = p_u->edgeWeight;
+			if (w < 0){
+				std::cout << "Negative edges are not allowed!" << std::endl;
+				return Graph(0);
+			}
+
+			if (distance[v] > distance[u] + w){
+				distance[v] = distance[u] + w;
+				pie[v] = u;
+				pqueue.decreaseKey(v, distance[v]);
+			}
+
+			p_u = p_u->next;
+		}
+	}
+
+
+
+	// Generating G' for the new tree graph.
+	Graph gTag(numVer);
+
+	for (int i = 0; i < numVer; i++) {
+		if (pie[i] != -1) {
+            int weight = distance[i] - distance[pie[i]];
+            gTag.addEdge(pie[i], i, weight);
+        }
+	}
+
+	std::cout << "Dijkstra Tree built successfully"<< std::endl;
+
+	delete[] distance;
+    delete[] pie;
+
+	return gTag;
 }
+
+// void Algorithms::relax(int u, Pnode &p_u, int *distance, int* pie, Pqueue &pqueue){
+// 	int v = p_u->index;
+// 	int w = p_u->edgeWeight;
+
+// 	if (distance[v] > distance[u] + w){
+// 		distance[v] = distance[u] + w;
+// 		pie[v] = u;
+// 		pqueue.decreaseKey(v, distance[v]);
+// 	}
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Graph Algorithms::prim(Graph g){
 	return NULL;
