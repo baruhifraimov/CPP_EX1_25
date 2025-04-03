@@ -117,6 +117,8 @@ class Pqueue{
 		 * @param newPriority 
 		 */
 		void decreaseKey(int vertex, int newPriority);
+
+		int getSize();
 };
 /**************************************************************
  *                           STACK                            *

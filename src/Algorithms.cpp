@@ -169,20 +169,6 @@ Graph Algorithms::dfs(Graph g, int vertex){
 	return gTag;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Graph Algorithms::dijkstra(Graph g, int vertex){
 	int numVer = g.getNumVertices();
 	
@@ -235,8 +221,6 @@ Graph Algorithms::dijkstra(Graph g, int vertex){
 		}
 	}
 
-
-
 	// Generating G' for the new tree graph.
 	Graph gTag(numVer);
 
@@ -266,27 +250,163 @@ Graph Algorithms::dijkstra(Graph g, int vertex){
 // 	}
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Graph Algorithms::prim(Graph g){
-	return NULL;
+	int numVer = g.getNumVertices();
+	
+	 int* key = new int[numVer];
+	 int* pie = new int[numVer];
+	 Pqueue pque(numVer);
+	
+	// Initialize arrays
+	for (int i = 0; i < numVer; i++)
+	{
+		key[i] = INF;
+		pie[i] = -1;
+	}
+
+	// pick the first defined vertex (in order)
+	int s = -1;
+	Pnode* g_adjList = g.getGraph();
+	for (int i = 0; i < numVer; i++)
+	{
+		if(g_adjList[i]!=nullptr){
+			s = i;
+			break;
+		}
+	}
+
+	if(s == -1){
+		return Graph(0);
+	}
+
+	key[s] = 0;
+
+	// add all the available vertices to the queue
+	for (size_t i = 0; i < numVer; i++)
+	{
+	   if(g_adjList[i]!=nullptr){
+		   pque.insert(i,key[i]);
+	   }
+   }
+
+	while (!pque.isEmpty())
+	{
+		// extract the vertex with the smalled edge weight
+		int u = pque.extractMin();
+		if(u == -1) break;
+
+		Pnode curr = g_adjList[u];
+		// for each adjacent of u
+		while(curr != nullptr){
+			int v = curr->index;
+			if(pque.contains(v) && curr->edgeWeight < key[v]){
+				pie[v] = u;
+				key[v] = curr->edgeWeight;
+				pque.decreaseKey(v,key[v]);
+			}
+			curr = curr->next;
+		}
+	}
+
+	// build the MST
+    Graph mst(numVer);
+    for (int i = 0; i < numVer; i++) {
+        if(pie[i] != -1) {
+            mst.addEdge(pie[i], i, key[i]);
+        }
+    }
+    
+    delete[] key;
+    delete[] pie;
+
+	std::cout << "Prim's MST built successfully" << std::endl;
+	return mst;
 }
 
-Graph Algorithms::kruskal(Graph g){
-	return NULL;
+Graph Algorithms::kruskal(Graph g) {
+    // Edge structure to store source, destination, and weight
+    struct Edge {
+        int src;
+        int dest;
+        int weight;
+    };
+    
+    int numVer = g.getNumVertices();
+    if (numVer == 0) {
+        return Graph(0);
+    }
+    
+    // count the total edges
+    int edgeCount = 0;
+    Pnode* adjList = g.getGraph();
+    for (int i = 0; i < numVer; i++) {
+        Pnode curr = adjList[i];
+        while (curr != nullptr) {
+            // only count edges once (when src < dest to avoid duplicates)
+            if (i < curr->index) {
+                edgeCount++;
+            }
+            curr = curr->next;
+        }
+    }
+    
+    if (edgeCount == 0) {
+        return Graph(numVer); // if no edges, return empty graph
+    }
+    
+    // create an array of all edges
+    Edge* edges = new Edge[edgeCount];
+    int edgeIndex = 0;
+    for (int i = 0; i < numVer; i++) {
+        Pnode curr = adjList[i];
+        while (curr != nullptr) {
+            // Only add edges once
+            if (i < curr->index) {
+                edges[edgeIndex].src = i;
+                edges[edgeIndex].dest = curr->index;
+                edges[edgeIndex].weight = curr->edgeWeight;
+                edgeIndex++;
+            }
+            curr = curr->next;
+        }
+    }
+    
+    // sort edges by weight
+    for (int i = 0; i < edgeCount - 1; i++) {
+        int minIdx = i;
+        for (int j = i + 1; j < edgeCount; j++) {
+            if (edges[j].weight < edges[minIdx].weight) {
+                minIdx = j;
+            }
+        }
+
+        Edge temp = edges[i];
+        edges[i] = edges[minIdx];
+        edges[minIdx] = temp;
+    }
+    
+    // initialize UnionFind
+    UnionFind uf(numVer);
+    
+    // construct MST
+    Graph mst(numVer);
+    int edgesAdded = 0;
+    
+    for (int i = 0; i < edgeCount && edgesAdded < numVer - 1; i++) {
+        int srcRoot = uf.find(edges[i].src);
+        int destRoot = uf.find(edges[i].dest);
+        
+        // if including this edge doesn't create a cycle
+        if (srcRoot != destRoot) {
+            mst.addEdge(edges[i].src, edges[i].dest, edges[i].weight);
+            uf.unite(srcRoot, destRoot); // join the two components
+            edgesAdded++;
+        }
+    }
+    
+    // Free memory
+    delete[] edges;
+    
+    std::cout << "Kruskal's MST built successfully" << std::endl;
+    return mst;
 }

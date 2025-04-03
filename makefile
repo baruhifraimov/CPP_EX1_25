@@ -23,10 +23,11 @@ $(OBJDIR)/main.o: $(SRCDIR)/main/main.cpp
 test:
 	@echo "Test target not implemented yet."
 
-valgrid:
-	@echo "Valgrind target not implemented yet."
+#make sure to run 'ulimit -n 1024' before runing valgrind, thank you
+valgrind:
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./Main
 
-.PHONY: clean
+.PHONY: clean valgrid
 
 clean:
 	rm -rf $(OBJDIR) Main *.o

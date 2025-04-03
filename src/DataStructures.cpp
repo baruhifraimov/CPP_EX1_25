@@ -89,6 +89,10 @@ void Pqueue::decreaseKey(int vertex, int newPriority){
     std::cout << "Vertex " << vertex << " not found in queue" << std::endl;
 }
 
+int Pqueue::getSize(){
+	return this->size;
+}
+
 /**************************************************************
  *                           STACK                            *
  **************************************************************/

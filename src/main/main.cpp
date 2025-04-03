@@ -29,5 +29,11 @@ int main(){
 	graph::Graph t = graph::Algorithms::dijkstra(g,1);
 	t.print_graph();
 
+	graph::Graph e = graph::Algorithms::prim(g);
+	e.print_graph();
+
+	graph::Graph x = graph::Algorithms::kruskal(g);
+	x.print_graph();
+
 	return 0;
 }
