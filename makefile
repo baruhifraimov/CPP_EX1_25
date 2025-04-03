@@ -24,10 +24,18 @@ test:
 	@echo "Test target not implemented yet."
 
 #make sure to run 'ulimit -n 1024' before runing valgrind, thank you
+#
+#--leak-check=full: "each individual leak will be shown in detail"
+#--show-leak-kinds=all: Show all of "definite, indirect, possible, 
+#				reachable" leak kinds in the "full" report.
+#--track-origins=yes: Favor useful output over speed. This tracks 
+#			the origins of uninitialized values, which could be very useful 
+#			for memory errors. Consider turning off if Valgrind is unacceptably slow.
+#
 valgrind:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./Main
 
-.PHONY: clean valgrid
+.PHONY: clean valgrind
 
 clean:
 	rm -rf $(OBJDIR) Main *.o
