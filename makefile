@@ -4,6 +4,12 @@ SRCDIR = ./src
 INCDIR = ./include
 OBJDIR = ./obj
 
+# compiles everything
+run:
+	make Main
+	make test
+
+.PHONY: clean valgrind Main
 
 #compile the main program
 Main: $(OBJDIR)/main.o $(OBJDIR)/Graph.o $(OBJDIR)/Algorithms.o $(OBJDIR)/DataStructures.o 
@@ -19,9 +25,14 @@ $(OBJDIR)/main.o: $(SRCDIR)/main/main.cpp
 	mkdir -p $(OBJDIR)
 	$(CC) $(CCFLAGS) -I$(INCDIR) -c $< -o $@
 
+test: $(OBJDIR)/doctest.o $(OBJDIR)/Graph.o $(OBJDIR)/Algorithms.o $(OBJDIR)/DataStructures.o 
+	$(CC) $(CCFLAGS) -o $@ $^
 
-test:
-	@echo "Test target not implemented yet."
+#compile only the main file
+$(OBJDIR)/doctest.o: $(SRCDIR)/doctest.cpp
+	mkdir -p $(OBJDIR)
+	$(CC) $(CCFLAGS) -I$(INCDIR) -c $< -o $@
+
 
 #make sure to run 'ulimit -n 1024' before runing valgrind, thank you
 #
@@ -33,9 +44,8 @@ test:
 #			for memory errors. Consider turning off if Valgrind is unacceptably slow.
 #
 valgrind:
+	ulimit -n 1024
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./Main
 
-.PHONY: clean valgrind
-
 clean:
-	rm -rf $(OBJDIR) Main *.o
+	rm -rf $(OBJDIR) test Main *.o

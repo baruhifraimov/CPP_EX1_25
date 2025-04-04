@@ -1,3 +1,4 @@
+//baruh.ifraimov@gmail.com
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
@@ -19,8 +20,8 @@ namespace graph{
 	}Node,*Pnode;
 
 	class Graph{
-		// number of vertexes
-		int V;
+		// number of vertices [V], number of edges [E]
+		int V,E;
 		// the graph itself, array of nodes(vertices)
 		Pnode* adjlist;
 		public:
@@ -70,6 +71,13 @@ namespace graph{
 			 */
 			int getNumVertices();
 
+
+			/**
+			 * @brief Returns the number of Edges of the graph
+			 * TL;DR - returns |E|
+			 * 
+			 */
+			int getNumEdges();
 	};
 }
 

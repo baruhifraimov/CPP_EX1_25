@@ -1,5 +1,7 @@
+//baruh.ifraimov@gmail.com
 #ifndef DATASTRUCTURES_HPP
 #define DATASTRUCTURES_HPP
+
 #include "../include/Graph.hpp"
 
 
@@ -14,6 +16,11 @@
 		int* queue;
 
 	public:
+	/**
+	 * @brief Construct a new Queue object
+	 * 
+	 * @param capacity The capacity of the Queue 
+	 */
 		Queue(int capacity) : first(0),last(0),size(0),capacity(capacity){
 			this->queue = new int[capacity];	
 		}
@@ -53,6 +60,12 @@
 /**************************************************************
  *                           PQUEUE                           *
  **************************************************************/
+
+ /**
+  * @brief a vertex definiton that includes the index of it vertex for identification
+  * and a distance that will act as the weight/priority
+  * 
+  */
 typedef struct _Vertex {
     int vertex;
     int distance;
@@ -65,6 +78,11 @@ class Pqueue{
 		int capacity;
 
 	public:
+	/**
+	 * @brief Construct a new Pqueue object
+	 * 
+	 * @param capacity The capacity of the Priority Queue
+	 */
 		Pqueue(int capacity):capacity(capacity){
 			this->size = 0;
 			this->pqueue = new Vertex[capacity];
@@ -74,47 +92,48 @@ class Pqueue{
 			}
 			
 		}
+
 		~Pqueue(){
 			delete[] pqueue;
 		}
 		
 		/**
-		 * @brief 
+		 * @brief Insert a vertices and his priority.
 		 * 
-		 * @param vertex 
-		 * @param priority 
+		 * @param vertex a vertex that exists in the graph
+		 * @param priority the value that you want it to be prioritized
 		 */
 		void insert(int vertex, int priority);
 
 		/**
-		 * @brief 
+		 * @brief Extracting the minimum priority by value, runing all over the queue linearly
 		 * 
-		 * @return int 
+		 * @return int retunrs the minimum vertex index
 		 */
 		int extractMin();
 
 		/**
-		 * @brief 
+		 * @brief Checks if the queue is empty by comparing capacity to size
 		 * 
-		 * @return true 
-		 * @return false 
+		 * @return true if empty
+		 * @return false if not empty
 		 */
 		bool isEmpty();
 
 		/**
-		 * @brief 
+		 * @brief Checks if a certain vertex contains in the queue
 		 * 
-		 * @param vertex 
-		 * @return true 
-		 * @return false 
+		 * @param vertex The vertex that you want to check
+		 * @return true If in
+		 * @return false If not in
 		 */
 		bool contains(int vertex);
 
 		/**
-		 * @brief 
+		 * @brief Decreasing the priority value of a given vertex
 		 * 
-		 * @param vertex 
-		 * @param newPriority 
+		 * @param vertex The vertex index you want to decrease his value
+		 * @param newPriority New value
 		 */
 		void decreaseKey(int vertex, int newPriority);
 
@@ -129,6 +148,11 @@ class Stack{
 		int capacity;
 
 	public:
+	/**
+	 * @brief Construct a new Stack object
+	 * 
+	 * @param capacity The capacity of the Stack
+	 */
 		Stack(int capacity) : top(-1), capacity(capacity){
 			this->array = new int[capacity];
 		}
@@ -170,9 +194,16 @@ class Stack{
  **************************************************************/
 class UnionFind{
 		int* parent;
+		int size;
 
 	public:
+	/**
+	 * @brief Construct a new Union Find object
+	 * 
+	 * @param size The size of the UnionFind, regulary will be |V|
+	 */
 		UnionFind(int size){
+			this->size = size;
 			this->parent = new int[size];
 			for (int i = 0; i < size; i++)
 			{

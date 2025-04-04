@@ -1,90 +1,140 @@
-<div dir="rtl">
+# Graph Data Structure & Algorithms Implementation
 
-# מטלה מספר 1 - מימוש גרף על ידי רשימת שכנויות
+## Project Overview
 
-### יושרה אקדמית
+This project provides a comprehensive implementation of a graph data structure using adjacency lists, along with several common graph algorithms. The project doesn't use the C++ Standard Template Library (STL) and instead implements the necessary data structures from scratch.
 
-במהלך העבודה על המטלות, מותר להתייעץ עם סטודנטים אחרים ולחפש מידע באינטרנט. עם זאת, חל איסור להעתיק קטעי קוד שלמים ממקורות חיצוניים, כולל סטודנטים אחרים, אתרי אינטרנט ומודלי בינה מלאכותית (כגון ChatGPT).
+## Data Structures
 
-יש לדווח על כל עזרה שקיבלתם, בין אם מדובר בהתייעצות עם סטודנטים אחרים או במידע שנמצא באינטרנט, בהתאם ל[תקנון היושר של המחלקה](https://www.ariel.ac.il/wp/cs/wp-content/uploads/sites/88/2020/08/Guidelines-for-Academic-Integrity.pdf).
-**במקרה של שימוש בכלי בינה מלאכותית (AI), יש לצרף את הפרומפטים שהוזנו ואת התשובות שהתקבלו**.
+### Graph Class
 
------
-* **מטרת המטלה:** הבנת החומר הנלמד בהרצאות הראשונות, כגון: ניהול זיכרון ב ++C, מחלקות, בנאים, מפרקים, עצמים, מרחבי שמות, העברת פרמטרים לפונקציות, החזרת אובייקטים.
-* **שימו לב!** במטלה **אסור** להשתמש בספרייה הסטנדרטית, ניתן להשתמש במערך. **זאת אומרת תצטרכו לממש מבנה/י נתונים המתאים לצרכי המטלה**. כל המיכלים הסטנדרטיים כולל vector או stack *אינם זמינים* לכם במטלה זו.
-* **ההגשה ביחידים**.
+The core data structure is an undirected graph implemented using adjacency lists:
 
----
+- **Vertices**: Each vertex has an index (0 to V-1) and a linked list of adjacent vertices.
+- **Edges**: Undirected weighted edges between vertices.
+- **Initialization**: Created with a fixed number of vertices that cannot be changed.
+- **Memory Management**: Uses deep copy constructor and proper memory cleanup in destructor.
 
-## הוראות הגשה ב Moodle:
+#### Key Methods:
+- `addEdge(s, t, w=1)`: Adds an undirected edge with optional weight between vertices `s` and `t`.
+- `removeEdge(a, b)`: Removes an edge between vertices `a` and `b`.
+- `print_graph()`: Displays the graph's structure.
+- `getNumVertices()`: Returns the number of vertices.
+- `getNumEdges()`: Returns the number of edges.
 
-במערכת Moodle יש להגיש **קובץ טקסט למשל (`submission.txt`)** המכיל 3 שורות בפורמט הבא:
+#### Error Handling:
+- Throws `std::invalid_argument` when constructing with non-positive vertex count.
+- Throws `std::out_of_range` when accessing vertices outside valid range.
+- Throws `std::overflow_error` when attempting to add duplicate edges.
+- Throws `std::invalid_argument` when attempting to remove non-existent edges.
 
-1. **תעודת זהות** – מספר תעודת הזהות של הסטודנט.
-2. **קישור להגשה** – קישור למאגר ה-GitHub שבו נמצא הפרויקט.
-3. **פרטי ה-commit האחרון** – המחרוזת המזהה של ה-commit האחרון (`commit hash`) 
+### Helper Data Structures
 
- - דוגמה לקובץ הגשה תקין:
+#### Queue
+- Circular array-based implementation for BFS.
+- Operations: `enqueue`, `dequeue`, `isEmpty`.
+- Exception handling for queue overflow and underflow.
+
+#### Priority Queue
+- Array-based implementation for Dijkstra's and Prim's algorithms.
+- Operations: `insert`, `extractMin`, `decreaseKey`, `contains`, `isEmpty`.
+- Exception handling for capacity limits and invalid operations.
+
+#### Stack
+- Array-based implementation for DFS.
+- Operations: `push`, `pop`, `peek`, `isEmpty`.
+- Exception handling for overflow and underflow conditions.
+
+#### UnionFind
+- Disjoint-set data structure for Kruskal's algorithm.
+- Operations: `find`, `unite`.
+- Exception handling for invalid indices.
+
+## Algorithms
+
+### Breadth-First Search (BFS)
+- **Input**: A graph and a source vertex.
+- **Output**: A tree rooted at the source vertex.
+- **Process**: Uses a queue to discover vertices in order of their distance from the source.
+- **Exceptions**: Throws `std::out_of_range` if source vertex is invalid.
+
+### Depth-First Search (DFS)
+- **Input**: A graph and a starting vertex.
+- **Output**: A forest containing tree edges from the DFS traversal.
+- **Process**: Uses a stack-based approach to explore as far as possible along branches before backtracking.
+- **Exceptions**: Throws `std::out_of_range` if starting vertex is invalid.
+
+### Dijkstra's Algorithm
+- **Input**: A graph and a source vertex.
+- **Output**: A tree of shortest paths from the source to all reachable vertices.
+- **Process**: Uses a priority queue to greedily select vertices with minimum distance.
+- **Exceptions**: 
+  - Throws `std::out_of_range` if source vertex is invalid.
+  - Throws `std::invalid_argument` if graph contains negative edges.
+
+### Prim's Algorithm (MST)
+- **Input**: A graph.
+- **Output**: A minimum spanning tree.
+- **Process**: Grows the MST by adding the minimum-weight edge that connects a vertex in the tree to a vertex outside.
+- **Exceptions**:
+  - Throws `std::invalid_argument` for empty graphs.
+  - Throws `std::logic_error` if graph has no valid vertices.
+
+### Kruskal's Algorithm (MST)
+- **Input**: A graph.
+- **Output**: A minimum spanning tree.
+- **Process**: Sorts all edges by weight and adds them to the MST if they don't create a cycle.
+- **Exceptions**:
+  - Throws `std::invalid_argument` for empty graphs.
+  - Throws `std::logic_error` for graphs with no edges.
+
+## Testing
+
+The project includes comprehensive test cases to verify the correctness of all implementations:
+
+- **Basic Graph Operations**: Constructor, edge addition/removal, copy constructor.
+- **Data Structure Tests**: Queue, Priority Queue, Stack, UnionFind.
+- **Algorithm Tests**: Validation of BFS, DFS, Dijkstra's, Prim's, and Kruskal's algorithms.
+- **Error Handling Tests**: Verification that appropriate exceptions are thrown for invalid inputs.
+- **Comprehensive Stress Test**: Tests all algorithms on a complex graph.
+
+## Build and Run
+
+The project includes a Makefile with the following targets:
+
+- `make Main`: Builds and runs the demonstration file.
+- `make test`: Builds and runs the unit tests.
+- `make valgrind`: Runs memory leak tests using Valgrind.
+- `make clean`: Removes all build artifacts.
+
+### Running Tests
+
+```bash
+# Run all tests
+make test
+
+# Check for memory leaks
+make valgrind
 ```
-123456789
-https://github.com/example-user/graph-assignment
-e3f1c1a 
-```
 
----
+## Error Handling
 
-גרפים הם חלק בלתי נפרד ממדעי המחשב. במהלך הלימודים נחשפתם לדרכים שונות לייצוג של גרפים (מטריצת שכנויות, רשימת שכנויות ועוד).
+The implementation employs robust error handling using exceptions:
 
-במטלה זו תממשו גרף באמצעות **רשימת שכנויות** – [Adjacency List](https://en.wikipedia.org/wiki/Adjacency_list).
+- `std::invalid_argument`: For invalid inputs like negative vertex counts.
+- `std::out_of_range`: For accessing vertices beyond the valid range.
+- `std::overflow_error`: For operations that exceed capacity limits.
+- `std::underflow_error`: For operations on empty data structures.
+- `std::logic_error`: For operations that are logically impossible (like MST on a disconnected graph).
 
----
+## Project Structure
 
-## דרישות המטלה:
+- `include/`: Header files defining class interfaces.
+- `src/`: Implementation files.
+- `doctest.cpp`: Unit tests using the doctest framework.
+- `Makefile`: Build automation.
 
-### מימוש המחלקות הבאות:
-הוסיפו את המחלקות במרחב שמות (namespace) חדש ( קראו לו ```graph```).
+## Notes
 
-#### מחלקה בשם `Graph`:
-הגרף יאותחל עם מספר קודקודים מסוים ולא ניתן יהיה לשנות את מספר הקודקודים בגרף. 
-המחלקה תכיל את רשימת השכנויות וכן את הפונקציות הבאות:
-
-1. פונקציה  `addEdge`  מקבלת שלושה מספרים שלמים: מקור, יעד ומשקל (ברירת המחדל למשקל היא 1). הפונקציה תוסיף צלע (לא מכוונת) לגרף.
-2. פונקציה  `removeEdge` מקבלת שני מספרים שלמים המייצגים צלע ומוחקת אותה מהגרף. אם הצלע לא קיימת, הפונקציה תזרוק חריגה.
-3. פונקציה  `print_graph` מדפיסה את הגרף בצורה כלשהי הגיונית לבחירתכם.
-4. במידת הצורך, יש להוסיף בנאים\פונקציות עזר רלונטיות למחלקה.
-
-#### מחלקה בשם `Algorithms`:
-מחלקה זו תממש אלגוריתמים שונים על גרף לא מכוון. הכי קרוב שאפשר לאלו שלמדתם בקורס אלגוריתמים 1. המחלקה תכיל את הפונקציות הבאות:
-
-1. פונקציה `bfs` – מקבלת גרף וקודקוד מקור ומחזירה גרף שהוא עץ מושרש (שהשורש הוא קודקוד המקור כמובן) שהתקבל מסריקת BFS.  
-2. פונקציה `dfs` – מקבלת גרף וקודקוד ממנו תתחיל הסריקה ומחזירה גרף (עץ או יער) המתקבל לפי סריקת DFS. (עץ זה יכיל קודקודים מקוריים ורק צלעות מסוג tree edges).
-3. פונקציה `dijkstra` – מקבלת גרף וקודקוד התחלה ומחזירה עץ ממושקל של מסלולים קצרים ביותר.
-4. פונקציה `prim` – מקבלת גרף, מחשבת את העץ הפורש המינימלי ומחזירה אותו (כלומר מחזירה גרף המייצג את העץ).
-5. פונקציה `kruskal` – כמו סעיף הקודם.
--  מכיוון ש-STL אינה זמינה במטלה זו, לצורך מימוש אלגוריתמים אלו תצטרכו לממש באופן בסיסי מבני נתונים נוספים: תור ו\או תור עדיפויות ו-union find. מימוש בסיסי אומר כי מספיק לממש מבנים אלו רק פונקציאונלית, אין דרישה מיוחדת לסיבוכיות. 
-    
----
-
-#### דרישות נוספות:
-
-- חשוב לוודא שה-repository ציבורי.
-- כתבו בתחילת **כל** קובץ את כתובת המייל שלכם.
-- כתבו קוד נקי, מסודר, מחולק לקבצים, מודולרי, מתועד בצורה מספקת וכמובן בדיקות יחידה עבור כל הפונקציות.
-- בדקו את תקינות הקלט ולזרוק חריגות מתאימות במידת הצורך.
-- לשימושכם הקישור הבא [doctest](https://github.com/doctest/doctest) בו תוכלו לראות דוגמאות נוספות לשימוש בסיפריה זו.
-- יש לבדוק שאין זליגת זיכרון באמצעות `valgrind`.
-- יש לצרף גם קובץ `README` עם הסבר על פרויקט, על חלוקה למחלקות וקבצים וכל מידע אחר רלוונטי.
-
-
-#### קובץ `Makefile`:
-הוסיפו לפרויקט קובץ `Makefile` הכולל את הפקודות הבאות:
-- הפקודה `make Main` – להרצת קובץ ההדגמה.
-- הפקודה `make test` – להרצת בדיקות היחידה.
-- הפקודה `make valgrind` – בדיקת זליגת זיכרון באמצעות valgrind.
-- הפקודה `make clean` - מוחקת את כל הקבצים הלא רלוונטיים לאחר ההרצה.
-
-
-בהצלחה!
-
-</div>
+This project was developed as an assignment focusing on C++ fundamental concepts including memory management, classes, constructors/destructors, objects, namespaces, parameter passing, and returning objects.
 

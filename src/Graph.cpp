@@ -1,4 +1,7 @@
+//baruh.ifraimov@gmail.com
 #include <iostream>
+#include <exception>
+#include <stdexcept>
 #include "../include/Graph.hpp"
 #include "../include/DataStructures.hpp"
 
@@ -7,14 +10,21 @@
 
 
 using namespace graph;
-
 Graph::Graph(int V) : V(V){
+
+	if (V <= 0) {
+        throw std::invalid_argument("Number of vertices must be positive");
+    }
+
 	adjlist = new Pnode[V];
 	for (int i = 0; i < V; i++)
 	{
 		adjlist[i] = nullptr;
 	}
+
+	this->E = 0;
 }
+
 // Deep copy
 Graph::Graph(const Graph& other) : V(other.V) {
     // Deep copy the adjacency list
@@ -54,7 +64,7 @@ void Graph::addEdge(int s,int t, int w){
 
 		}
 		else{
-		std::cout << "Invalid edge: " << s << " -> " << t << std::endl;
+		throw std::out_of_range("Invalid edge: " + std::to_string(s) + " --> " + std::to_string(t));
 		return;
 		}
 	}
@@ -63,10 +73,14 @@ void Graph::addEdge(int s,int t, int w){
 			adjlist[t] = new Node(w, INF);
 		} else {
 			Pnode curr = adjlist[t];
-			while (curr->next != nullptr) {
+			Pnode prev = nullptr;
+			
+			while (curr != nullptr) {
+				prev = curr;
 				curr = curr->next;
 			}
-			curr->next = new Node(w, INF);
+			E++;
+			prev->next = new Node(w, INF);
 		}
 		return;
 	}
@@ -74,42 +88,62 @@ void Graph::addEdge(int s,int t, int w){
 		if (adjlist[s] == nullptr) {
 			adjlist[s] = new Node(w, INF);
 		} else {
-			Pnode curr = adjlist[t];
-			while (curr->next != nullptr) {
+			Pnode curr = adjlist[s];
+			Pnode prev = nullptr;
+			
+			while (curr != nullptr) {
+				prev = curr;
 				curr = curr->next;
 			}
-			curr->next = new Node(w, INF);
+			E++;
+			prev->next = new Node(w, INF);
 		}
 		return;
 	}
+
 	if (adjlist[s] == nullptr) {
 		adjlist[s] = new Node(t, w);
 	} else {
 		Pnode curr = adjlist[s];
-		while (curr->next != nullptr) {
+		Pnode prev = nullptr;
+		
+		// Check for duplicates
+		while (curr != nullptr) {
 			if (curr->index == t) {
-				std::cout << "Edge already exists!" << std::endl;
-				return;
+				throw std::overflow_error("Edge already exists!");
 			}
+			prev = curr;
 			curr = curr->next;
 		}
-		curr->next = new Node(t, w);
+		
+		// Add the new node at the end of the list
+		prev->next = new Node(t, w);
+		E++;
 	}
 
+	// Do the same for the other side of the edge
 	if (adjlist[t] == nullptr) {
 		adjlist[t] = new Node(s, w);
 	} else {
 		Pnode curr = adjlist[t];
-		while (curr->next != nullptr) {
+		Pnode prev = nullptr;
+		
+		while (curr != nullptr) {
+			if (curr->index == s) {
+				throw std::overflow_error("Edge already exists!");
+			}
+			prev = curr;
 			curr = curr->next;
 		}
-		curr->next = new Node(s, w);
+		
+		prev->next = new Node(s, w);
+		E++;
 	}
 }
 
 void Graph::removeEdge(int a, int b) {
 	if ((a < 0 || a >= V || b < 0 || b >= V)) {
-        std::cout << "Invalid edge: " << a << " -> " << b << std::endl;
+		throw std::out_of_range("Invalid edge: " + std::to_string(a) + " --> " + std::to_string(b));
         return;
     }
 
@@ -170,4 +204,8 @@ Pnode* Graph::getGraph(){
 
 int Graph::getNumVertices(){
 	return this->V;
+}
+
+int Graph::getNumEdges(){
+	return this->E;
 }

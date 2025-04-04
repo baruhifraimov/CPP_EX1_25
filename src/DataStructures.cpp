@@ -1,5 +1,8 @@
-#include "../include/DataStructures.hpp"
+//baruh.ifraimov@gmail.com
 #include <iostream>
+#include <exception>
+#include <stdexcept>
+#include "../include/DataStructures.hpp"
 
 #define INF 2147483647
 
@@ -8,7 +11,7 @@
  **************************************************************/
 bool Queue::enqueue(int vertex){
 	if(size == capacity){
-		return false;
+		throw std::overflow_error("Queue capacity exceeded");
 	}
 	this->queue[this->last] = vertex;
 	this->last = (this->last + 1) % this->capacity;
@@ -18,7 +21,7 @@ bool Queue::enqueue(int vertex){
 
 int Queue::dequeue(){
 	if(isEmpty()){
-		return 2147483647;
+		throw std::underflow_error("Cannot extract from empty priority");
 	}
 	int x = this->queue[this->first];
 	this->first = (this->first + 1) % this->capacity;
@@ -34,7 +37,7 @@ bool Queue::isEmpty(){
  **************************************************************/
 void Pqueue::insert(int vertex, int priority){
 	if(this->size == this->capacity){
-		std::cout<< "Capacity exceeded" <<std::endl;
+        throw std::overflow_error("Priority queue capacity exceeded");
 		return;
 	}
 	Vertex x;
@@ -55,7 +58,7 @@ int Pqueue::extractMin() {
     }
 
     if (minIndex == -1) {
-        return -1;
+        throw std::underflow_error("Cannot extract from empty priority queue");
     }
 
     int minVertex = pqueue[minIndex].vertex;
@@ -86,7 +89,7 @@ void Pqueue::decreaseKey(int vertex, int newPriority){
             return;
         }
     }
-    std::cout << "Vertex " << vertex << " not found in queue" << std::endl;
+    throw std::invalid_argument("Vertex " + std::to_string(vertex) + " not found in queue");
 }
 
 int Pqueue::getSize(){
@@ -98,14 +101,14 @@ int Pqueue::getSize(){
  **************************************************************/
 void Stack::push(int value){
 	if (this->top == this->capacity-1){
-		std::cout << "The stack is full" << std::endl;
+        throw std::overflow_error("Stack capacity exceeded");
 		return;
 	}
 	this->array[++this->top] = value;
 }
 int Stack::pop(){
 	if(this->isEmpty()){
-		return -2147483648;
+        throw std::underflow_error("Cannot pop from empty stack");
 	}
 	int x = this->array[this->top];
 	this->top--;
@@ -113,7 +116,7 @@ int Stack::pop(){
 }
 int Stack::peek(){
 	if (this->isEmpty()){
-		return -2147483648;
+        throw std::underflow_error("Cannot peek at empty stack");
 	}
 	return this->array[this->top];
 }
@@ -125,6 +128,10 @@ bool Stack::isEmpty(){
  **************************************************************/
 
  int UnionFind::find(int i){
+	if (i < 0 || i >= this->size) {
+        throw std::out_of_range("Index " + std::to_string(i) + " out of range");
+    }
+
 	if (this->parent[i] == i){
 		return i;
 	}
@@ -132,5 +139,8 @@ bool Stack::isEmpty(){
  }
 
 void UnionFind::unite(int i, int j){
+	if (i < 0 || i >= size || j < 0 || j >= this->size) {
+        throw std::out_of_range("Index out of range");
+    }
 	this->parent[find(j)] = find(i);
 }

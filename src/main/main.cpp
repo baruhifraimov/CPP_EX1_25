@@ -1,3 +1,4 @@
+//baruh.ifraimov@gmail.com
 #include "../../include/namespace/graph.hpp"
 #include "../../include/Graph.hpp"
 #include "../../include/Algorithms.hpp"

@@ -1,4 +1,7 @@
+//baruh.ifraimov@gmail.com
 #include <iostream>
+#include <exception>
+#include <stdexcept>
 #include "../include/Algorithms.hpp"
 #include "../include/namespace/graph.hpp"
 #include "../include/DataStructures.hpp"
@@ -16,8 +19,7 @@ enum colors{
 Graph Algorithms::bfs(Graph g, int vertex){
 	int numVer = g.getNumVertices();
 	if (vertex >= numVer || vertex < 0){
-		std::cout << "Vertex out of bounds!" << std::endl;
-		return Graph(0);
+		throw std::out_of_range("Vertex " + std::to_string(vertex) + " is out of bounds");
 	}
 
 	
@@ -45,14 +47,12 @@ Graph Algorithms::bfs(Graph g, int vertex){
 		
 		// Check if dequeued value is INF (which indicates empty queue)
 		if(u == INF) {
-			std::cout << "Error: Queue returned INF value" << std::endl;
-			break;
+			throw std::runtime_error("Queue returned INF value");
 		}
 
 		// Check if vertex index is valid
 		if(u < 0 || u >= numVer) {
-			std::cout << "Error: Invalid vertex index " << u << std::endl;
-			continue;
+			throw std::out_of_range("Invalid vertex index: " + std::to_string(u));
 		}
 
 		Node* curr = g.getGraph()[u];
@@ -112,8 +112,7 @@ Graph Algorithms::dfs(Graph g, int vertex){
 	int time = -1;
 	int numVer = g.getNumVertices();
 	if (vertex >= numVer || vertex < 0){
-		std::cout << "Vertex out of bounds!" << std::endl;
-		return Graph(0);
+		throw std::out_of_range("Vertex " + std::to_string(vertex) + " is out of bounds");
 	}
 
 	
@@ -173,8 +172,7 @@ Graph Algorithms::dijkstra(Graph g, int vertex){
 	int numVer = g.getNumVertices();
 	
 	if (vertex >= numVer || vertex < 0){
-		std::cout << "Vertex out of bounds!" << std::endl;
-		return Graph(0);
+		throw std::out_of_range("Vertex " + std::to_string(vertex) + " is out of bounds");
 	}
 
 	 int* distance = new int[numVer];
@@ -197,18 +195,20 @@ Graph Algorithms::dijkstra(Graph g, int vertex){
 	}
 
 	while(!pqueue.isEmpty()){
-		int u = pqueue.extractMin();
-		if(u == -1){
-			break;
+		int u;
+		try{
+		u = pqueue.extractMin();
 		}
+		catch(const std::underflow_error& e){
+		break;
+	}
 		Pnode p_u = g.getGraph()[u];
 		while(p_u != nullptr){
 			// the relax algorithm
 			int v = p_u->index;
 			int w = p_u->edgeWeight;
 			if (w < 0){
-				std::cout << "Negative edges are not allowed!" << std::endl;
-				return Graph(0);
+				throw std::invalid_argument("Negative edges are not allowed");
 			}
 
 			if (distance[v] > distance[u] + w){
@@ -250,77 +250,94 @@ Graph Algorithms::dijkstra(Graph g, int vertex){
 // 	}
 // }
 
-Graph Algorithms::prim(Graph g){
-	int numVer = g.getNumVertices();
-	
-	 int* key = new int[numVer];
-	 int* pie = new int[numVer];
-	 Pqueue pque(numVer);
-	
-	// Initialize arrays
-	for (int i = 0; i < numVer; i++)
-	{
-		key[i] = INF;
-		pie[i] = -1;
-	}
-
-	// pick the first defined vertex (in order)
-	int s = -1;
-	Pnode* g_adjList = g.getGraph();
-	for (int i = 0; i < numVer; i++)
-	{
-		if(g_adjList[i]!=nullptr){
-			s = i;
-			break;
-		}
-	}
-
-	if(s == -1){
-		return Graph(0);
-	}
-
-	key[s] = 0;
-
-	// add all the available vertices to the queue
-	for (size_t i = 0; i < numVer; i++)
-	{
-	   if(g_adjList[i]!=nullptr){
-		   pque.insert(i,key[i]);
-	   }
-   }
-
-	while (!pque.isEmpty())
-	{
-		// extract the vertex with the smalled edge weight
-		int u = pque.extractMin();
-		if(u == -1) break;
-
-		Pnode curr = g_adjList[u];
-		// for each adjacent of u
-		while(curr != nullptr){
-			int v = curr->index;
-			if(pque.contains(v) && curr->edgeWeight < key[v]){
-				pie[v] = u;
-				key[v] = curr->edgeWeight;
-				pque.decreaseKey(v,key[v]);
-			}
-			curr = curr->next;
-		}
-	}
-
-	// build the MST
+Graph Algorithms::prim(Graph g) {
+    int numVer = g.getNumVertices();
+    
+    if (numVer == 0) {
+        throw std::invalid_argument("Cannot create MST for empty graph");
+    }
+    
+    // Arrays to store MST data
+    int* key = new int[numVer];  // Holds minimum edge weight to each vertex
+    int* pie = new int[numVer];  // Holds parent of each vertex in MST
+    bool* inMST = new bool[numVer]; // Tracks vertices already in MST
+    
+    // Initialize arrays
+    for (int i = 0; i < numVer; i++) {
+        key[i] = INF;
+        pie[i] = -1;
+        inMST[i] = false;
+    }
+    
+    Pnode* g_adjList = g.getGraph();
+    
+    // Find first vertex with edges to start
+    int startVertex = -1;
+    for (int i = 0; i < numVer; i++) {
+        if (g_adjList[i] != nullptr) {
+            startVertex = i;
+            break;
+        }
+    }
+    
+    if (startVertex == -1) {
+        throw std::logic_error("Graph has no defined vertices");
+    }
+    
+    // Start from the selected vertex
+    key[startVertex] = 0;
+    
+    // Create priority queue
+    Pqueue pq(numVer);
+    
+    // Add all vertices to the priority queue
+    for (int i = 0; i < numVer; i++) {
+        pq.insert(i, key[i]); // All vertices start with INF except startVertex
+    }
+    
+    while (!pq.isEmpty()) {
+        // Extract the vertex with minimum key value
+        int u;
+        try {
+            u = pq.extractMin();
+        } catch (const std::underflow_error& e) {
+            break;
+        }
+        
+        inMST[u] = true;
+        
+        // Process all adjacent vertices of u
+        Pnode curr = g_adjList[u];
+        while (curr != nullptr) {
+            int v = curr->index;
+            int weight = curr->edgeWeight;
+            
+            // Update key if v is not in MST and weight is smaller than current key
+            if (!inMST[v] && weight < key[v]) {
+                pie[v] = u;
+                key[v] = weight;
+                pq.decreaseKey(v, weight);
+            }
+            
+            curr = curr->next;
+        }
+    }
+    
+    // Construct MST
     Graph mst(numVer);
     for (int i = 0; i < numVer; i++) {
-        if(pie[i] != -1) {
+        if (pie[i] != -1) {
             mst.addEdge(pie[i], i, key[i]);
         }
     }
     
+	std::cout<<"Prim MST built successfully" << std::endl;
+
     delete[] key;
     delete[] pie;
-
-	std::cout << "Prim's MST built successfully" << std::endl;
-	return mst;
+    delete[] inMST;
+    
+    return mst;
 }
 
 Graph Algorithms::kruskal(Graph g) {
@@ -333,8 +350,8 @@ Graph Algorithms::kruskal(Graph g) {
     
     int numVer = g.getNumVertices();
     if (numVer == 0) {
-        return Graph(0);
-    }
+		throw std::invalid_argument("Cannot create MST for empty graph");
+	}
     
     // count the total edges
     int edgeCount = 0;
@@ -351,8 +368,8 @@ Graph Algorithms::kruskal(Graph g) {
     }
     
     if (edgeCount == 0) {
-        return Graph(numVer); // if no edges, return empty graph
-    }
+		throw std::logic_error("Cannot create MST for graph with no edges");
+	}
     
     // create an array of all edges
     Edge* edges = new Edge[edgeCount];
