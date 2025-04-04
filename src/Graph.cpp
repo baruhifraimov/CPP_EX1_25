@@ -79,7 +79,6 @@ void Graph::addEdge(int s,int t, int w){
 				prev = curr;
 				curr = curr->next;
 			}
-			E++;
 			prev->next = new Node(w, INF);
 		}
 		return;
@@ -95,7 +94,6 @@ void Graph::addEdge(int s,int t, int w){
 				prev = curr;
 				curr = curr->next;
 			}
-			E++;
 			prev->next = new Node(w, INF);
 		}
 		return;
@@ -103,6 +101,7 @@ void Graph::addEdge(int s,int t, int w){
 
 	if (adjlist[s] == nullptr) {
 		adjlist[s] = new Node(t, w);
+		E++;
 	} else {
 		Pnode curr = adjlist[s];
 		Pnode prev = nullptr;
@@ -124,6 +123,7 @@ void Graph::addEdge(int s,int t, int w){
 	// Do the same for the other side of the edge
 	if (adjlist[t] == nullptr) {
 		adjlist[t] = new Node(s, w);
+		E++;
 	} else {
 		Pnode curr = adjlist[t];
 		Pnode prev = nullptr;
@@ -163,7 +163,6 @@ void Graph::removeEdge(int a, int b) {
         prev = curr;
         curr = curr->next;
     }
-
     // Remove edge from a's adjacency list
     curr = adjlist[a];
     prev = nullptr;
@@ -180,6 +179,7 @@ void Graph::removeEdge(int a, int b) {
         prev = curr;
         curr = curr->next;
     }
+	E-=2;
 }
 
 void Graph::print_graph(){
@@ -207,5 +207,5 @@ int Graph::getNumVertices(){
 }
 
 int Graph::getNumEdges(){
-	return this->E;
+	return this->E/2;
 }
