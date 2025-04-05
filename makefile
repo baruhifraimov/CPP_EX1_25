@@ -6,14 +6,14 @@ OBJDIR = ./obj
 
 # compiles everything
 run:
-	make Main
-	make test
+	@echo "Please consider the following:\n\tmake Main, make valgrind, make test"
 
 .PHONY: clean valgrind Main
 
 #compile the main program
 Main: $(OBJDIR)/main.o $(OBJDIR)/Graph.o $(OBJDIR)/Algorithms.o $(OBJDIR)/DataStructures.o 
 	$(CC) $(CCFLAGS) -o $@ $^
+	./Main
 
 #compile source files into object files
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp 
@@ -27,6 +27,7 @@ $(OBJDIR)/main.o: $(SRCDIR)/main/main.cpp
 
 test: $(OBJDIR)/doctest.o $(OBJDIR)/Graph.o $(OBJDIR)/Algorithms.o $(OBJDIR)/DataStructures.o 
 	$(CC) $(CCFLAGS) -o $@ $^
+	./test
 
 #compile only the main file
 $(OBJDIR)/doctest.o: $(SRCDIR)/doctest.cpp
