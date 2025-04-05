@@ -4,11 +4,11 @@ SRCDIR = ./src
 INCDIR = ./include
 OBJDIR = ./obj
 
-# compiles everything
+# Instructions
 run:
-	@echo "Please consider the following:\n\tmake Main, \n\tmake valgrind, \n\tmake test."
+	@echo "Please consider the following:\n\tmake Main, \n\tmake valgrind, \n\tmake test \n\tmake clean."
 
-.PHONY: clean valgrind Main
+.PHONY: clean valgrind test Main
 
 #compile the main program
 Main: $(OBJDIR)/main.o $(OBJDIR)/Graph.o $(OBJDIR)/Algorithms.o $(OBJDIR)/DataStructures.o 
