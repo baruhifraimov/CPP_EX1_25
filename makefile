@@ -6,7 +6,7 @@ OBJDIR = ./obj
 
 # compiles everything
 run:
-	@echo "Please consider the following:\n\tmake Main, make valgrind, make test"
+	@echo "Please consider the following:\n\tmake Main, \n\tmake valgrind, \n\tmake test."
 
 .PHONY: clean valgrind Main
 
